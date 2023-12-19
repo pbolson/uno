@@ -9,7 +9,7 @@
 * Define a data model with some simplifying assumptions
 * Synthesize data according to the data model ([code/synthesize_data.py](code/synthesize_data.py))
 * Develop a SQL query ([code/create_report.sql](code/create_report.sql)) using the synthetic data. I am using SQLite syntax here. 
-* Test ([code/test_create_report_query.py](code/test_create_report_query.py)) that query returns a result similar to the table above ([output/results.csv](output/results.csv))
+* Test ([code/test_create_report_query.py](code/test_create_report_query.py)) that the query returns a result similar to the table above ([output/results.csv](output/results.csv))
 * Provide thoughts on how to harden this solution given that the underlying report is acceptable to the customer. 
 
 ## 1. Data Model
@@ -33,7 +33,7 @@
 4. Optimization for performance, cost, and maintenance
    * Query
      * Look at reducing sub-queries. Consider whether they can be simplified or broken into separate queries, especially if the datasets are large.
-     * Avoid Functions in WHERE Clauses: The use of UPPER(SUBSTRING(last_name, 1, 1)) in the CASE statements might prevent the use of indexes. If possible, store and compare these values in their upper-case form to begin with, or use a computed column.
+     * Avoid functions in WHERE Clauses: The use of UPPER(SUBSTRING(last_name, 1, 1)) in the CASE statements might prevent the use of indexes. If possible, store and compare these values in their upper-case form to begin with, or use a computed column.
      * For readability, consider replacing implicit joins (using commas in the FROM clause) with explicit JOIN statements. 
    * Data model
      * Ensure there are indexes on member_id for all tables.  Also consider indexing on last name.
