@@ -21,7 +21,19 @@
 2. Similarly, there is a 1-to-1 relationship between eligibility checks and enrollments. The eligibility_checks entity is mandatory, enrollments is optional.  Each enrollment must have an eligibility check associated with it, but eligibility checks are not required to have an enrollment.
 3. member_id is NOT NULL and unique, but none of the other fields have NOT NULL requirements or other validation requirements.  Any data issues are treated in the query rather than at record insertion into the database.
 
-## 2. Hardening the Solution
+## 2. Notes on the Query
+
+The query ([code/create_report.sql](code/create_report.sql)) was designed to minimize data traversal, so that it can scale efficiently. 
+The data is traversed twice to produce the desired table, because the three tables need to be concatenated then aggregated. 
+One traversal of the data would be possible with a different data model.
+
+Note the use of UNION ALL during concatenation.  This is necessary to avoid de-duping records when individuals have the same last name. 
+If UNION was used instead, member_id would need to be brought in, which is less efficient.
+
+The CASE clause within the ORDER BY clause allows the metric order in the example table to be maintained rather than the default 
+alphabetical ordering.
+
+## 3. Hardening the Solution
 1. Deploying to production - If the user accepts this prototype, then it can be moved from dev to test and then the production environment.  
    * Address any inconsistencies between SQLite and Snowflake SQL.  Both engines use similar flavors of ANSI-SQL and should not have major differences.
    * Test query results with real data and compare to known result
